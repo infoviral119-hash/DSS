@@ -19,6 +19,8 @@ import { getIntelligence as getAiIntelligence, getLlmNarrative, getLlmStatus, ch
 import { getIntelligence as getForecastIntelligence, getMlStatus } from './forecast-simple'
 import { handleSecurityAdmin } from './security-admin'
 import { handleBackup } from './backup-simple'
+import { handleReports, handlePublicShare } from './reports-simple'
+import { handleImport } from './import-simple'
 
 async function parseBody(request: Request): Promise<Record<string, unknown> | undefined> {
   if (request.method === 'GET' || request.method === 'HEAD') return undefined
@@ -51,6 +53,9 @@ export async function handleLocal(
   if (path === '/api/auth/track-login' && request.method === 'POST') {
     return json({ ok: true, sessionId: `sess-${Date.now().toString(36)}` }, 200, cors)
   }
+
+  const publicShare = await handlePublicShare(path, request.method, env, url, cors)
+  if (publicShare) return publicShare
 
   const q = queryParams(url)
   const authResult = await requireAuth(request, env)
@@ -219,6 +224,32 @@ export async function handleLocal(
     const body = await parseBody(request)
     const backupResult = await handleBackup(path, request.method, env, body)
     if (backupResult !== null) return json(backupResult, 200, cors)
+  }
+
+  if (path.startsWith('/api/reports/')) {
+    const body = await parseBody(request)
+    try {
+      const reportResult = await handleReports(path, request.method, env, user, url, body, cors)
+      if (reportResult !== null) {
+        if (reportResult instanceof Response) {
+          Object.entries(cors).forEach(([k, v]) => reportResult.headers.set(k, v))
+          return reportResult
+        }
+        return json(reportResult, 200, cors)
+      }
+    } catch (e) {
+      return json({ message: (e as Error).message }, 400, cors)
+    }
+  }
+
+  if (path.startsWith('/api/import/')) {
+    try {
+      const body = path === '/api/import/preview' ? undefined : await parseBody(request)
+      const importResult = await handleImport(path, request.method, env, user, request, body)
+      if (importResult !== null) return json(importResult, 200, cors)
+    } catch (e) {
+      return json({ message: (e as Error).message }, 400, cors)
+    }
   }
 
   if (path.startsWith('/api/security/')) {

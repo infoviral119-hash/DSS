@@ -55,3 +55,19 @@ export function queryParams(url: URL): Record<string, string | undefined> {
   url.searchParams.forEach((v, k) => { out[k] = v })
   return out
 }
+
+export function fileResponse(
+  body: string | Uint8Array,
+  contentType: string,
+  filename: string,
+  headers: Record<string, string> = {},
+) {
+  return new Response(body, {
+    status: 200,
+    headers: {
+      'Content-Type': contentType,
+      'Content-Disposition': `attachment; filename="${filename}"`,
+      ...headers,
+    },
+  })
+}
