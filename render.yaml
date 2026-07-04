@@ -1,0 +1,25 @@
+services:
+  - type: web
+    name: e-insight-api
+    runtime: node
+    region: singapore
+    plan: free
+    rootDir: backend
+    buildCommand: npm ci && npm run build
+    startCommand: node dist/main.js
+    healthCheckPath: /api
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: PORT
+        value: 3001
+      - key: CORS_ORIGIN
+        value: https://e-insight.pages.dev,http://localhost:5173
+      - key: SUPABASE_URL
+        value: https://vnfndvbxhvpikjxvnkmc.supabase.co
+      - key: SUPABASE_ANON_KEY
+        sync: false
+      - key: DATABASE_URL
+        sync: false
+      - key: JWT_SECRET
+        sync: false

@@ -1,0 +1,34 @@
+[
+  {
+    "to": "smoke@e-insight.local",
+    "subject": "[e-Insight] Smoke Weekly",
+    "body": "Laporan executive periode Periode Filter Aktif.\n\nRingkasan:\nPeriode Periode Filter Aktif\n458 kasus dianalisis\n349 selesai · 109 aktif\nCompletion Rate 76%\nKota Bandung menjadi wilayah dengan kasus tertinggi.\nJenis kekerasan terbanyak adalah KDRT.\nMayoritas korban Perempuan usía produktif.\n\nUnduh laporan: /laporan?category=executive",
+    "id": "EML-mr5qbqz4",
+    "status": "queued",
+    "createdAt": "2026-07-04T02:14:42.256Z"
+  },
+  {
+    "to": "smoke@e-insight.local",
+    "subject": "[Smoke] Laporan Test",
+    "body": "E2E dev smoke test\n\nUnduh laporan: /laporan",
+    "id": "EML-mr5qbq66",
+    "status": "queued",
+    "createdAt": "2026-07-04T02:14:41.214Z"
+  },
+  {
+    "to": "smoke@e-insight.local",
+    "subject": "[e-Insight] Smoke Weekly",
+    "body": "Laporan executive periode Periode Filter Aktif.\n\nRingkasan:\nPeriode Periode Filter Aktif\n456 kasus dianalisis\n349 selesai · 107 aktif\nCompletion Rate 77%\nKota Bandung menjadi wilayah dengan kasus tertinggi.\nJenis kekerasan terbanyak adalah KDRT.\nMayoritas korban Perempuan usía produktif.\n\nUnduh laporan: /laporan?category=executive",
+    "id": "EML-mr5o7ytn",
+    "status": "queued",
+    "createdAt": "2026-07-04T01:15:46.571Z"
+  },
+  {
+    "to": "smoke@e-insight.local",
+    "subject": "[Smoke] Laporan Test",
+    "body": "E2E dev smoke test\n\nUnduh laporan: /laporan",
+    "id": "EML-mr5o7y7a",
+    "status": "queued",
+    "createdAt": "2026-07-04T01:15:45.766Z"
+  }
+]

@@ -1,0 +1,20 @@
+node_modules/
+dist/
+.env
+.env.local
+.env.*.local
+*.env
+!*.env.example
+!POWERBI.env.example
+API URL.env
+DSS_Project_New.env
+passupabase.env
+reset pass database.env
+anon public*.env*
+*.log.DS_Store
+Thumbs.db
+desktop.ini
+.vscode/
+.idea/
+coverage/
+*.tsbuildinfo

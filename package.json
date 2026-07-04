@@ -1,0 +1,24 @@
+{
+  "name": "e-insight",
+  "version": "1.0.0",
+  "private": true,
+  "description": "e-Insight — Enterprise Decision Support System for SIMPATI.KK",
+  "scripts": {
+    "dev": "concurrently \"npm run dev:frontend\" \"npm run dev:backend\" \"npm run dev:ml\"",
+    "dev:frontend": "npm run dev --prefix frontend",
+    "dev:backend": "npm run start:dev --prefix backend",
+    "dev:ml": "cd ml-service && python -m uvicorn main:app --host 0.0.0.0 --port 8000",
+    "dev:email-webhook": "node backend/scripts/email-webhook-receiver.mjs",
+    "test:e2e": "node backend/scripts/e2e-smoke.mjs",
+    "build": "npm run build --prefix frontend && npm run build --prefix backend",
+    "build:frontend": "npm run build --prefix frontend",
+    "deploy:pages": "npm run build:frontend && wrangler pages deploy frontend/dist --project-name=e-insight --commit-dirty=true",
+    "deploy:pages:init": "wrangler pages project create e-insight --production-branch main",
+    "export:powerbi": "node backend/scripts/export-powerbi-csv.js",
+    "fix": "npm run build --prefix backend && npm run dev",
+    "geocode": "npm run geocode --prefix backend"
+  },
+  "devDependencies": {
+    "concurrently": "^9.1.2"
+  }
+}
