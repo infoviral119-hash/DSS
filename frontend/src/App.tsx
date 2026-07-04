@@ -1,4 +1,4 @@
-import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom'
+import { BrowserRouter, Routes, Route } from 'react-router-dom'
 import { lazy, Suspense } from 'react'
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 import { ThemeProvider } from '@/contexts/ThemeContext'
@@ -16,6 +16,7 @@ import { PendampinganPage } from '@/pages/PendampinganPage'
 import { AIInsightPage } from '@/pages/AIInsightPage'
 import { ForecastingPage } from '@/pages/ForecastingPage'
 import { LaporanPage } from '@/pages/LaporanPage'
+import { PowerBiPage } from '@/pages/PowerBiPage'
 import { MasterDataPage } from '@/pages/MasterDataPage'
 import { PengaturanPage } from '@/pages/PengaturanPage'
 
@@ -61,7 +62,7 @@ export default function App() {
                   <Route path="import" element={<ImportDataPage />} />
                   <Route path="analitik" element={<AnalitikPage />} />
                   <Route path="gis" element={<Suspense fallback={<GisFallback />}><GISPage /></Suspense>} />
-                  <Route path="powerbi" element={<Navigate to="/analitik" replace />} />
+                  <Route path="powerbi" element={<PowerBiPage />} />
                   <Route path="ai-insight" element={<AIInsightPage />} />
                   <Route path="forecasting" element={<ForecastingPage />} />
                   <Route path="laporan" element={<LaporanPage />} />

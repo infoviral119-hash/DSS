@@ -6,6 +6,20 @@ export type Env = {
   SUPABASE_SERVICE_ROLE_KEY?: string
   BACKEND_URL?: string
   CORS_ORIGIN?: string
+  OPENAI_API_KEY?: string
+  AI_API_KEY?: string
+  OPENAI_BASE_URL?: string
+  AI_MODEL?: string
+  AI_PROVIDER?: string
+  AI_LLM_ENABLED?: string
+  ML_SERVICE_URL?: string
+  POWERBI_EMBED_URL?: string
+  POWERBI_SHARE_URL?: string
+  POWER_BI_TENANT_ID?: string
+  POWER_BI_CLIENT_ID?: string
+  POWER_BI_CLIENT_SECRET?: string
+  POWER_BI_WORKSPACE_ID?: string
+  POWER_BI_REPORT_ID?: string
 }
 
 export type AuthUser = {

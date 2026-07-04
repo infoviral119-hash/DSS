@@ -15,12 +15,13 @@ import {
   getSavedFilters, saveFilter, deleteSavedFilter, getPreferences, savePreferences,
   exportCases, bulkAction,
 } from './case-mgmt'
-import { getIntelligence as getAiIntelligence, getLlmNarrative, getLlmStatus, chat, getInsights as getAiInsights } from './ai-simple'
-import { getIntelligence as getForecastIntelligence, getMlStatus } from './forecast-simple'
+import { getIntelligence as getAiIntelligence, getLlmNarrative, getLlmStatusHandler, chat, getInsights as getAiInsights } from './ai-simple'
+import { getIntelligence as getForecastIntelligence, getMlStatusHandler } from './forecast-simple'
 import { handleSecurityAdmin } from './security-admin'
 import { handleBackup } from './backup-simple'
 import { handleReports, handlePublicShare } from './reports-simple'
 import { handleImport } from './import-simple'
+import { handlePowerBi } from './powerbi-simple'
 
 async function parseBody(request: Request): Promise<Record<string, unknown> | undefined> {
   if (request.method === 'GET' || request.method === 'HEAD') return undefined
@@ -192,7 +193,7 @@ export async function handleLocal(
     return json(await getLlmNarrative(env, q), 200, cors)
   }
   if (path === '/api/ai/llm-status' && request.method === 'GET') {
-    return json(await getLlmStatus(), 200, cors)
+    return json(await getLlmStatusHandler(env), 200, cors)
   }
   if (path === '/api/ai/chat' && request.method === 'POST') {
     const body = await request.json() as { message: string }
@@ -203,7 +204,7 @@ export async function handleLocal(
     return json(await getForecastIntelligence(env, q), 200, cors)
   }
   if (path === '/api/forecast/ml-status' && request.method === 'GET') {
-    return json(await getMlStatus(), 200, cors)
+    return json(await getMlStatusHandler(env), 200, cors)
   }
 
   if (path === '/api/security/notifications/unread-count' && request.method === 'GET') {
@@ -249,6 +250,15 @@ export async function handleLocal(
       if (importResult !== null) return json(importResult, 200, cors)
     } catch (e) {
       return json({ message: (e as Error).message }, 400, cors)
+    }
+  }
+
+  if (path.startsWith('/api/powerbi/')) {
+    try {
+      const pbiResult = await handlePowerBi(path, request.method, env)
+      if (pbiResult !== null) return json(pbiResult, 200, cors)
+    } catch (e) {
+      return json({ message: (e as Error).message }, 500, cors)
     }
   }
 

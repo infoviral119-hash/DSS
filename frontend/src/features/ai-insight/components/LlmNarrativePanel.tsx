@@ -40,7 +40,8 @@ export function LlmNarrativePanel({ fallbackBrief, onBriefUpgrade }: LlmNarrativ
         <CardContent className="flex items-center gap-3 p-4 text-sm text-muted-foreground">
           <Bot className="h-5 w-5 shrink-0" />
           <div>
-            <p className="font-medium text-foreground">LLM Tahap 2 — belum aktif</p>
+            <p className="font-medium text-foreground">LLM belum aktif</p>
+            <p className="text-xs">Set OPENAI_API_KEY di Cloudflare Pages secrets untuk mengaktifkan narasi AI.</p>
             <p className="text-xs">Set OPENAI_API_KEY di backend .env lalu restart.</p>
           </div>
         </CardContent>

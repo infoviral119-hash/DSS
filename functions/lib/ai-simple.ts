@@ -1,6 +1,7 @@
 import type { Env } from './shared'
 import { dbClient } from './shared'
 import { applyCaseFilters, countByField, parseCaseFilters } from './case-filters'
+import { generateNarrative, chatLlm, getLlmStatus, isLlmEnabled } from './ai-llm'
 
 type CaseRow = Record<string, unknown>
 
@@ -84,27 +85,33 @@ const EMPTY = {
 export async function getIntelligence(env: Env, query: Record<string, string | undefined>) {
   const cases = await loadCases(env, query)
   const role = query.role || 'direktur'
-  if (!cases.length) return { ...EMPTY, llmAvailable: false }
-  return { ...buildIntelligence(cases, role), llmAvailable: false }
+  const llmAvailable = isLlmEnabled(env)
+  if (!cases.length) return { ...EMPTY, llmAvailable }
+  return { ...buildIntelligence(cases, role), llmAvailable }
 }
 
 export async function getLlmNarrative(env: Env, query: Record<string, string | undefined>) {
   const cases = await loadCases(env, query)
-  const intel = cases.length ? buildIntelligence(cases, query.role || 'direktur') : EMPTY
-  return {
-    narrative: intel.executiveBrief || intel.narrative,
-    source: cases.length ? 'rules' : 'empty',
-    generatedAt: new Date().toISOString(),
-    llmAvailable: false,
+  const role = query.role || 'direktur'
+  const intel = cases.length ? buildIntelligence(cases, role) : EMPTY
+  if (!cases.length) {
+    return { ...await generateNarrative(env, intel, role), source: 'empty', generatedAt: new Date().toISOString() }
   }
+  const llm = await generateNarrative(env, intel, role)
+  return { ...llm, source: isLlmEnabled(env) ? 'hybrid' : 'rules', generatedAt: new Date().toISOString() }
 }
 
-export async function getLlmStatus() {
-  return { enabled: false, provider: null, model: null, message: 'LLM tidak dikonfigurasi di Pages Functions' }
+export async function getLlmStatusHandler(env: Env) {
+  return getLlmStatus(env)
 }
 
 export async function chat(env: Env, query: Record<string, string | undefined>, message: string) {
-  const intel = await getIntelligence(env, query)
+  const cases = await loadCases(env, query)
+  const role = query.role || 'direktur'
+  const intel = cases.length ? buildIntelligence(cases, role) : EMPTY
+  if (isLlmEnabled(env)) {
+    return { ...await chatLlm(env, intel, role, message), llmAvailable: true }
+  }
   return {
     reply: `Berdasarkan ${intel.totalCases} kasus: ${intel.executiveBrief} Pertanyaan Anda: "${message}"`,
     source: 'rules',
