@@ -6,3 +6,4 @@ pages_build_output_dir = "frontend/dist"
 [vars]
 SUPABASE_URL = "https://vnfndvbxhvpikjxvnkmc.supabase.co"
 CORS_ORIGIN = "https://e-insight.pages.dev,http://localhost:5173"
+ML_SERVICE_URL = "https://e-insight-ml.onrender.com"
