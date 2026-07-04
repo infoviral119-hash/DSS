@@ -1,6 +1,7 @@
 import type { Env } from './shared'
 import { dbClient } from './shared'
 import { applyCaseFilters, countByField, parseCaseFilters } from './case-filters'
+import { isDirujuk, normalizeKonselingMode, normalizePendidikan, normalizeProsesPenerimaan } from './pendampingan-labels'
 
 type CaseRow = Record<string, unknown>
 
@@ -15,28 +16,67 @@ async function loadCases(env: Env, query: Record<string, string | undefined>) {
   return { cases: applyCaseFilters(data as CaseRow[], filters), connected: true }
 }
 
-function isDirujuk(catatan: string, outcome: string) {
-  const t = `${catatan} ${outcome}`.toLowerCase()
-  return t.includes('dirujuk') || t.includes('rujuk')
-}
-
 function buildPendampinganStats(cases: CaseRow[]) {
   let dirujuk = 0
   let tidakDirujuk = 0
   const konseling: Record<string, number> = {}
+  const penerimaan: Record<string, number> = {}
+  const pendidikan: Record<string, number> = {}
   for (const c of cases) {
     const catatan = String(c.catatan ?? '')
     const outcome = String(c.outcome ?? '')
     if (isDirujuk(catatan, outcome)) dirujuk++
     else tidakDirujuk++
-    const mode = String(c.status_pendampingan ?? 'Tidak diketahui')
+    const mode = normalizeKonselingMode(String(c.status_pendampingan ?? ''), catatan)
     konseling[mode] = (konseling[mode] ?? 0) + 1
+    const channel = normalizeProsesPenerimaan(catatan)
+    penerimaan[channel] = (penerimaan[channel] ?? 0) + 1
+    const edu = normalizePendidikan(String(c.pendidikan ?? ''))
+    pendidikan[edu] = (pendidikan[edu] ?? 0) + 1
   }
   return {
     dirujuk: { dirujuk, tidakDirujuk, total: cases.length },
     konseling,
-    penerimaan: {},
-    pendidikan: {},
+    penerimaan,
+    pendidikan,
+  }
+}
+
+export async function getPendampingan(env: Env, query: Record<string, string | undefined>) {
+  const { cases, connected } = await loadCases(env, query)
+  return { connected, ...buildPendampinganStats(cases) }
+}
+
+export async function getForecast(env: Env, query: Record<string, string | undefined>) {
+  const months = Math.min(24, Math.max(1, Number(query.months) || 6))
+  const { cases, connected } = await loadCases(env, query)
+  const byMonth: Record<string, number> = {}
+  for (const c of cases) {
+    const month = String(c.tanggal).slice(0, 7)
+    byMonth[month] = (byMonth[month] ?? 0) + 1
+  }
+  const sorted = Object.entries(byMonth).sort(([a], [b]) => a.localeCompare(b))
+  const values = sorted.map(([, count]) => count)
+  const avg = values.length ? values.reduce((a, b) => a + b, 0) / values.length : 0
+  const lastMonths = sorted.slice(-6)
+  let trend = 0
+  if (lastMonths.length >= 2) {
+    trend = (lastMonths[lastMonths.length - 1][1] - lastMonths[0][1]) / (lastMonths.length - 1)
+  }
+  const lastDate = sorted.length ? new Date(`${sorted[sorted.length - 1][0]}-01`) : new Date()
+  const predictions: { month: string; predicted: number; lower: number; upper: number }[] = []
+  for (let i = 1; i <= months; i++) {
+    const d = new Date(lastDate)
+    d.setMonth(d.getMonth() + i)
+    const month = d.toISOString().slice(0, 7)
+    const predicted = Math.max(0, Math.round(avg + trend * i))
+    predictions.push({ month, predicted, lower: Math.max(0, Math.round(predicted * 0.8)), upper: Math.round(predicted * 1.2) })
+  }
+  return {
+    connected,
+    historical: sorted.map(([month, count]) => ({ month, count })),
+    predictions,
+    model: 'moving-average-trend',
   }
 }
 

@@ -84,3 +84,15 @@ export async function getMaster(env: Env, user?: AuthUser | null) {
       .sort((a, b) => b.count - a.count),
   }
 }
+
+const REVEAL_ROLES = new Set(['admin', 'auditor', 'direktur', 'ketua_yayasan', 'supervisor'])
+
+export async function revealField(env: Env, user: AuthUser, caseId: string, field: string) {
+  if (!REVEAL_ROLES.has(user.role) && !user.canRevealPii) {
+    return { ok: false, message: 'Tidak diizinkan mengungkap PII' }
+  }
+  const db = dbClient(env)
+  const { data, error } = await db.from('cases').select('*').eq('id', caseId).single()
+  if (error || !data) throw new Error('Kasus tidak ditemukan')
+  return { ok: true, caseId, field, value: data[field as keyof typeof data] ?? null }
+}
