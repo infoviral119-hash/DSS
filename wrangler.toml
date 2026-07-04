@@ -1,3 +1,7 @@
 name = "e-insight"
 compatibility_date = "2024-09-23"
 pages_build_output_dir = "frontend/dist"
+
+[vars]
+SUPABASE_URL = "https://vnfndvbxhvpikjxvnkmc.supabase.co"
+CORS_ORIGIN = "https://e-insight.pages.dev,http://localhost:5173"

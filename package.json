@@ -12,13 +12,19 @@
     "test:e2e": "node backend/scripts/e2e-smoke.mjs",
     "build": "npm run build --prefix frontend && npm run build --prefix backend",
     "build:frontend": "npm run build --prefix frontend",
-    "deploy:pages": "npm run build:frontend && wrangler pages deploy frontend/dist --project-name=e-insight --commit-dirty=true",
+    "deploy:pages": "npm run build:frontend && npx wrangler pages deploy frontend/dist --project-name=e-insight --branch=main --commit-dirty=true",
     "deploy:pages:init": "wrangler pages project create e-insight --production-branch main",
+    "tunnel:api": "powershell -ExecutionPolicy Bypass -File scripts/start-api-tunnel.ps1",
+    "tunnel:api:sync": "powershell -ExecutionPolicy Bypass -File scripts/start-api-tunnel.ps1 -UpdateSecret",
+    "deploy:worker": "npm run deploy:worker --prefix backend",
     "export:powerbi": "node backend/scripts/export-powerbi-csv.js",
     "fix": "npm run build --prefix backend && npm run dev",
     "geocode": "npm run geocode --prefix backend"
   },
   "devDependencies": {
     "concurrently": "^9.1.2"
+  },
+  "dependencies": {
+    "@supabase/supabase-js": "^2.110.0"
   }
 }
