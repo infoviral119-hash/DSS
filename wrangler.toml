@@ -4,7 +4,9 @@ compatibility_flags = ["nodejs_compat_v2"]
 pages_build_output_dir = "frontend/dist"
 
 [vars]
-AI_MODEL = "gpt-4o-mini"
+AI_PROVIDER = "groq"
+OPENAI_BASE_URL = "https://api.groq.com/openai/v1"
+AI_MODEL = "llama-3.3-70b-versatile"
 SUPABASE_URL = "https://vnfndvbxhvpikjxvnkmc.supabase.co"
 CORS_ORIGIN = "https://e-insight.pages.dev,http://localhost:5173"
 ML_SERVICE_URL = "https://e-insight-e-insight-ml.hf.space"

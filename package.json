@@ -20,6 +20,8 @@
     "tunnel:ml:sync": "powershell -ExecutionPolicy Bypass -File scripts/start-ml-tunnel.ps1 -UpdateSecret",
     "ml:sync-url": "powershell -ExecutionPolicy Bypass -File scripts/sync-ml-url.ps1",
     "llm:setup": "powershell -ExecutionPolicy Bypass -File scripts/setup-llm.ps1",
+    "llm:setup:groq": "powershell -ExecutionPolicy Bypass -File scripts/setup-llm.ps1 -Provider groq",
+    "llm:setup:openai": "powershell -ExecutionPolicy Bypass -File scripts/setup-llm.ps1 -Provider openai",
     "deploy:worker": "npm run deploy:worker --prefix backend",
     "export:powerbi": "node backend/scripts/export-powerbi-csv.js",
     "fix": "npm run build --prefix backend && npm run dev",

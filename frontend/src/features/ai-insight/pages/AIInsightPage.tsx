@@ -53,7 +53,7 @@ export function AIInsightPage() {
 
       <InsightCards cards={data.insightCards} />
 
-      <LlmNarrativePanel fallbackBrief={data.executiveBrief} onBriefUpgrade={setBrief} />
+      <LlmNarrativePanel fallbackBrief={data.executiveBrief} llmAvailable={data.llmAvailable} onBriefUpgrade={setBrief} />
 
       <NarrativeGenerator narrative={data.narrative} roleInsight={data.roleInsight} />
 

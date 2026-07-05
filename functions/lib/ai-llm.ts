@@ -186,10 +186,18 @@ Jangan mengarang angka. Jika data tidak cukup, katakan secara jujur.`
         ],
       }),
     })
-    if (!res.ok) throw new Error(`LLM ${res.status}`)
+    if (!res.ok) {
+      const errText = await res.text()
+      if (res.status === 429) {
+        throw new Error('Quota OpenAI habis — tambah billing di platform.openai.com atau ganti ke Groq/OpenRouter')
+      }
+      throw new Error(`LLM ${res.status}: ${errText.slice(0, 120)}`)
+    }
     const json = await res.json() as { choices?: { message?: { content?: string } }[] }
     return { reply: json.choices?.[0]?.message?.content || 'Tidak ada respons.' }
   } catch (err) {
-    return { reply: 'Gagal menghubungi LLM.', error: err instanceof Error ? err.message : 'error' }
+    const msg = err instanceof Error ? err.message : 'error'
+    const reply = msg.includes('Quota') ? msg : `Gagal menghubungi LLM. ${msg}`
+    return { reply, error: msg }
   }
 }

@@ -8,12 +8,13 @@ import { ConfidenceIndicator } from '@/features/ai-insight/components/Confidence
 
 interface LlmNarrativePanelProps {
   fallbackBrief: string
+  llmAvailable?: boolean
   onBriefUpgrade?: (brief: string) => void
 }
 
-export function LlmNarrativePanel({ fallbackBrief, onBriefUpgrade }: LlmNarrativePanelProps) {
+export function LlmNarrativePanel({ fallbackBrief, llmAvailable: llmAvailableProp, onBriefUpgrade }: LlmNarrativePanelProps) {
   const { data: status } = useAiLlmStatus()
-  const llmEnabled = Boolean(status?.enabled)
+  const llmEnabled = Boolean(status?.enabled ?? llmAvailableProp)
   const { data: llm, isLoading, isError } = useAiLlmNarrative(llmEnabled)
   const chat = useAiChat()
   const [question, setQuestion] = useState('')
@@ -41,8 +42,7 @@ export function LlmNarrativePanel({ fallbackBrief, onBriefUpgrade }: LlmNarrativ
           <Bot className="h-5 w-5 shrink-0" />
           <div>
             <p className="font-medium text-foreground">LLM belum aktif</p>
-            <p className="text-xs">Set OPENAI_API_KEY di Cloudflare Pages secrets untuk mengaktifkan narasi AI.</p>
-            <p className="text-xs">Set OPENAI_API_KEY di backend .env lalu restart.</p>
+            <p className="text-xs">Set OPENAI_API_KEY di Cloudflare Pages secrets (file openai.env + npm run llm:setup).</p>
           </div>
         </CardContent>
       </Card>
@@ -104,10 +104,11 @@ export function LlmNarrativePanel({ fallbackBrief, onBriefUpgrade }: LlmNarrativ
         </CardContent>
       </Card>
 
-      <Card>
+      <Card className="border-2 border-red-500 shadow-sm ring-1 ring-red-500/25">
         <CardHeader className="pb-2">
-          <CardTitle className="flex items-center gap-2 text-sm">
-            <Bot className="h-4 w-4" />
+          <CardTitle className="flex items-center gap-2 text-sm font-normal text-foreground">
+            <span className="inline-flex h-2 w-2 shrink-0 rounded-full bg-red-500" aria-hidden />
+            <Bot className="h-4 w-4 text-muted-foreground" />
             Tanya AI (kontekstual)
           </CardTitle>
         </CardHeader>
@@ -134,6 +135,11 @@ export function LlmNarrativePanel({ fallbackBrief, onBriefUpgrade }: LlmNarrativ
               {chat.isPending ? <Loader2 className="h-4 w-4 animate-spin" /> : <Send className="h-4 w-4" />}
             </Button>
           </div>
+          {messages.some((m) => m.role === 'ai' && m.text.includes('Quota')) && (
+            <p className="text-xs text-amber-700">
+              Quota OpenAI habis — aktifkan billing di platform.openai.com atau pakai Groq gratis (npm run llm:setup dengan Groq key).
+            </p>
+          )}
         </CardContent>
       </Card>
     </div>

@@ -22,11 +22,14 @@ export function useAiLlmNarrative(enabled = true) {
   })
 }
 
-export function useAiLlmStatus() {
+export function useAiLlmStatus(enabled = true) {
+  const { user } = useAuth()
   return useQuery<{ enabled: boolean; provider: string; model: string }>({
     queryKey: ['ai-llm-status'],
     queryFn: async () => (await api.get('/api/ai/llm-status')).data,
+    enabled: enabled && Boolean(user),
     staleTime: 60_000,
+    retry: 2,
   })
 }
 
