@@ -205,6 +205,13 @@ export function ImportDataPage() {
           <p className="text-xs text-muted-foreground">
             Import otomatis: LOGBOOK 2021–2025. File 2018–2020 diabaikan.
           </p>
+          {!docFiles?.files?.length && (
+            <p className="rounded-md border border-dashed border-amber-300 bg-amber-50/50 p-2 text-xs text-amber-900 dark:border-amber-800 dark:bg-amber-950/20 dark:text-amber-200">
+              Production: upload file manual di bawah, atau dari PC jalankan{' '}
+              <code className="rounded bg-black/5 px-1">npm run import:logbook</code>{' '}
+              (butuh <code className="rounded bg-black/5 px-1">import.auth.env</code> + folder <code className="rounded bg-black/5 px-1">doc/</code>).
+            </p>
+          )}
           <div className="flex flex-wrap gap-2">
             {docFiles?.files.map((f) => (
               <span key={f.fileName} className="rounded-md bg-secondary px-2 py-1 text-xs">

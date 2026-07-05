@@ -8,9 +8,14 @@ hugging*.env*
 hugging.env.txt
 openai.env
 groq.env
+powerbi.env
+import.auth.env
 llm.env
 openai*.env
 !openai.env.example
+!groq.env.example
+!powerbi.env.example
+!import.auth.env.example
 !*.env.example
 !POWERBI.env.example
 API URL.env
