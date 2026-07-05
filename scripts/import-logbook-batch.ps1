@@ -26,12 +26,22 @@ $auth = Read-EnvFile (Join-Path $root "import.auth.env")
 $email = $auth['EINSIGHT_EMAIL']
 $password = $auth['EINSIGHT_PASSWORD']
 $anonKey = $auth['SUPABASE_ANON_KEY']
+if (-not $anonKey) {
+  $rootEnv = Read-EnvFile (Join-Path $root ".env")
+  $anonKey = $rootEnv['SUPABASE_ANON_KEY']
+  if (-not $anonKey) { $anonKey = $rootEnv['VITE_SUPABASE_ANON_KEY'] }
+}
 if (-not $ApiBase) { $ApiBase = $auth['API_BASE'] }
 if (-not $ApiBase) { $ApiBase = "https://e-insight.pages.dev" }
 
 $supabaseUrl = "https://vnfndvbxhvpikjxvnkmc.supabase.co"
-if (-not $email -or -not $password -or -not $anonKey) {
-  Write-Host "Buat import.auth.env dari import.auth.env.example" -ForegroundColor Yellow
+if (-not $anonKey) {
+  Write-Host "SUPABASE_ANON_KEY tidak ditemukan (.env atau import.auth.env)" -ForegroundColor Yellow
+  exit 1
+}
+if (-not $email -or -not $password) {
+  Write-Host "Untuk import via API, isi EINSIGHT_EMAIL + EINSIGHT_PASSWORD di import.auth.env" -ForegroundColor Yellow
+  Write-Host "Atau jalankan import lokal: npm run import:logbook:local" -ForegroundColor Cyan
   exit 1
 }
 

@@ -10,12 +10,14 @@ openai.env
 groq.env
 powerbi.env
 import.auth.env
+supabase.env
 llm.env
 openai*.env
 !openai.env.example
 !groq.env.example
 !powerbi.env.example
 !import.auth.env.example
+!supabase.env.example
 !*.env.example
 !POWERBI.env.example
 API URL.env

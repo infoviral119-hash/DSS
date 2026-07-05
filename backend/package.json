@@ -14,6 +14,7 @@
     "start:prod": "node dist/main",
     "deploy:worker": "wrangler deploy",
     "geocode": "ts-node -r tsconfig-paths/register src/scripts/run-geocode.ts",
+    "import:doc": "ts-node -r tsconfig-paths/register src/scripts/run-import.ts",
     "lint": "eslint \"{src,apps,libs,test}/**/*.ts\" --fix",
     "test": "jest",
     "test:watch": "jest --watch",
