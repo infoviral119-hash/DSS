@@ -6,6 +6,10 @@ dist/
 *.env
 hugging*.env*
 hugging.env.txt
+openai.env
+llm.env
+openai*.env
+!openai.env.example
 !*.env.example
 !POWERBI.env.example
 API URL.env

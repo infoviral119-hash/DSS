@@ -4,6 +4,7 @@ compatibility_flags = ["nodejs_compat_v2"]
 pages_build_output_dir = "frontend/dist"
 
 [vars]
+AI_MODEL = "gpt-4o-mini"
 SUPABASE_URL = "https://vnfndvbxhvpikjxvnkmc.supabase.co"
 CORS_ORIGIN = "https://e-insight.pages.dev,http://localhost:5173"
 ML_SERVICE_URL = "https://e-insight-e-insight-ml.hf.space"
