@@ -13,6 +13,8 @@ export type Env = {
   AI_PROVIDER?: string
   AI_LLM_ENABLED?: string
   ML_SERVICE_URL?: string
+  METABASE_DASHBOARD_URL?: string
+  METABASE_PUBLIC_URL?: string
   POWERBI_EMBED_URL?: string
   POWERBI_SHARE_URL?: string
   POWER_BI_TENANT_ID?: string

@@ -9,6 +9,10 @@ hugging.env.txt
 openai.env
 groq.env
 powerbi.env
+metabase.env
+supabase.env
+supabase.token.env
+supabase.token.env.txt
 import.auth.env
 supabase.env
 llm.env
@@ -16,6 +20,7 @@ openai*.env
 !openai.env.example
 !groq.env.example
 !powerbi.env.example
+!METABASE.env.example
 !import.auth.env.example
 !supabase.env.example
 !*.env.example

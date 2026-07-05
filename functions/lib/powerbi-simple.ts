@@ -1,16 +1,30 @@
 import type { Env } from './shared'
 
 type EmbedResponse =
-  | { mode: 'iframe'; embedUrl: string }
-  | { mode: 'link'; shareUrl: string }
+  | { mode: 'metabase'; embedUrl: string; provider: 'metabase' }
+  | { mode: 'iframe'; embedUrl: string; provider?: 'powerbi' }
+  | { mode: 'link'; shareUrl: string; provider?: 'metabase' | 'powerbi' }
   | {
     mode: 'embed'
     reportId: string
     embedUrl: string
     accessToken: string
     expiration: string
+    provider?: 'powerbi'
   }
-  | { mode: 'none'; message: string; setup: string[] }
+  | { mode: 'none'; message: string; setup: string[]; provider?: 'none' }
+
+function metabaseDashboardUrl(env: Env) {
+  return env.METABASE_DASHBOARD_URL?.trim() || ''
+}
+
+function metabasePublicUrl(env: Env) {
+  return env.METABASE_PUBLIC_URL?.trim() || ''
+}
+
+function metabaseConfigured(env: Env) {
+  return Boolean(metabaseDashboardUrl(env) || metabasePublicUrl(env))
+}
 
 function hasServicePrincipal(env: Env) {
   return Boolean(
@@ -21,6 +35,19 @@ function hasServicePrincipal(env: Env) {
 }
 
 export function getStatus(env: Env) {
+  const mbDashboard = metabaseDashboardUrl(env)
+  const mbPublic = metabasePublicUrl(env)
+  if (metabaseConfigured(env)) {
+    return {
+      configured: true,
+      provider: 'metabase' as const,
+      mode: mbDashboard ? 'metabase' : 'link',
+      shareUrl: mbPublic || mbDashboard || null,
+      reportId: null,
+      workspaceId: null,
+    }
+  }
+
   const embedUrl = env.POWERBI_EMBED_URL?.trim()
   const shareUrl = env.POWERBI_SHARE_URL?.trim()
   const reportId = env.POWER_BI_REPORT_ID?.trim()
@@ -29,6 +56,7 @@ export function getStatus(env: Env) {
 
   return {
     configured: Boolean(embedUrl || shareUrl || (hasSp && reportId && workspaceId)),
+    provider: embedUrl || shareUrl || (hasSp && reportId && workspaceId) ? 'powerbi' as const : 'none' as const,
     mode: embedUrl ? 'iframe' : shareUrl ? 'link' : hasSp && reportId && workspaceId ? 'embed' : 'none',
     shareUrl: shareUrl ?? null,
     reportId: reportId ?? null,
@@ -58,11 +86,17 @@ async function getAzureToken(env: Env): Promise<string> {
 }
 
 export async function getEmbedConfig(env: Env): Promise<EmbedResponse> {
+  const mbDashboard = metabaseDashboardUrl(env)
+  if (mbDashboard) return { mode: 'metabase', embedUrl: mbDashboard, provider: 'metabase' }
+
+  const mbPublic = metabasePublicUrl(env)
+  if (mbPublic) return { mode: 'link', shareUrl: mbPublic, provider: 'metabase' }
+
   const embedUrl = env.POWERBI_EMBED_URL?.trim()
-  if (embedUrl) return { mode: 'iframe', embedUrl }
+  if (embedUrl) return { mode: 'iframe', embedUrl, provider: 'powerbi' }
 
   const shareUrl = env.POWERBI_SHARE_URL?.trim()
-  if (shareUrl) return { mode: 'link', shareUrl }
+  if (shareUrl) return { mode: 'link', shareUrl, provider: 'powerbi' }
 
   const workspaceId = env.POWER_BI_WORKSPACE_ID?.trim()
   const reportId = env.POWER_BI_REPORT_ID?.trim()
@@ -70,11 +104,13 @@ export async function getEmbedConfig(env: Env): Promise<EmbedResponse> {
   if (!hasServicePrincipal(env) || !workspaceId || !reportId) {
     return {
       mode: 'none',
-      message: 'Power BI belum dikonfigurasi',
+      provider: 'none',
+      message: 'Metabase / Power BI belum dikonfigurasi',
       setup: [
-        'Set POWERBI_SHARE_URL di Cloudflare Pages secrets (Share → Copy link dari Power BI)',
-        'Atau set POWERBI_EMBED_URL (Publish to Web)',
-        'Atau set POWER_BI_* untuk embed token via Service Principal',
+        'Metabase (gratis): npm run metabase:start → public dashboard → METABASE_DASHBOARD_URL',
+        'Atau set METABASE_PUBLIC_URL untuk link ke instance Metabase',
+        'Power BI: set POWERBI_SHARE_URL atau POWERBI_EMBED_URL di Cloudflare Pages secrets',
+        'Power BI advanced: set POWER_BI_* untuk embed token via Service Principal',
       ],
     }
   }
@@ -108,6 +144,7 @@ export async function getEmbedConfig(env: Env): Promise<EmbedResponse> {
   const tokenData = await tokenRes.json() as { token: string; expiration: string }
   return {
     mode: 'embed',
+    provider: 'powerbi',
     reportId: report.id,
     embedUrl: report.embedUrl,
     accessToken: tokenData.token,

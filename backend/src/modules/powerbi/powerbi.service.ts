@@ -2,22 +2,45 @@ import { Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 
 type EmbedResponse =
-  | { mode: 'iframe'; embedUrl: string }
-  | { mode: 'link'; shareUrl: string }
+  | { mode: 'metabase'; embedUrl: string; provider: 'metabase' }
+  | { mode: 'iframe'; embedUrl: string; provider?: 'powerbi' }
+  | { mode: 'link'; shareUrl: string; provider?: 'metabase' | 'powerbi' }
   | {
       mode: 'embed';
       reportId: string;
       embedUrl: string;
       accessToken: string;
       expiration: string;
+      provider?: 'powerbi';
     }
-  | { mode: 'none'; message: string; setup: string[] };
+  | { mode: 'none'; message: string; setup: string[]; provider?: 'none' };
 
 @Injectable()
 export class PowerBiService {
   constructor(private config: ConfigService) {}
 
+  private metabaseDashboardUrl() {
+    return this.config.get<string>('METABASE_DASHBOARD_URL')?.trim() || '';
+  }
+
+  private metabasePublicUrl() {
+    return this.config.get<string>('METABASE_PUBLIC_URL')?.trim() || '';
+  }
+
   getStatus() {
+    const mbDashboard = this.metabaseDashboardUrl();
+    const mbPublic = this.metabasePublicUrl();
+    if (mbDashboard || mbPublic) {
+      return {
+        configured: true,
+        provider: 'metabase' as const,
+        mode: mbDashboard ? 'metabase' : 'link',
+        shareUrl: mbPublic || mbDashboard || null,
+        reportId: null,
+        workspaceId: null,
+      };
+    }
+
     const embedUrl = this.config.get<string>('POWERBI_EMBED_URL')?.trim();
     const shareUrl = this.config.get<string>('POWERBI_SHARE_URL')?.trim();
     const reportId = this.config.get<string>('POWER_BI_REPORT_ID')?.trim();
@@ -26,6 +49,7 @@ export class PowerBiService {
 
     return {
       configured: Boolean(embedUrl || shareUrl || (hasSp && reportId && workspaceId)),
+      provider: embedUrl || shareUrl || (hasSp && reportId && workspaceId) ? 'powerbi' as const : 'none' as const,
       mode: embedUrl ? 'iframe' : shareUrl ? 'link' : hasSp && reportId && workspaceId ? 'embed' : 'none',
       shareUrl: shareUrl ?? null,
       reportId: reportId ?? null,
@@ -42,11 +66,17 @@ export class PowerBiService {
   }
 
   async getEmbedConfig(): Promise<EmbedResponse> {
+    const mbDashboard = this.metabaseDashboardUrl();
+    if (mbDashboard) return { mode: 'metabase', embedUrl: mbDashboard, provider: 'metabase' };
+
+    const mbPublic = this.metabasePublicUrl();
+    if (mbPublic) return { mode: 'link', shareUrl: mbPublic, provider: 'metabase' };
+
     const embedUrl = this.config.get<string>('POWERBI_EMBED_URL')?.trim();
-    if (embedUrl) return { mode: 'iframe', embedUrl };
+    if (embedUrl) return { mode: 'iframe', embedUrl, provider: 'powerbi' };
 
     const shareUrl = this.config.get<string>('POWERBI_SHARE_URL')?.trim();
-    if (shareUrl) return { mode: 'link', shareUrl };
+    if (shareUrl) return { mode: 'link', shareUrl, provider: 'powerbi' };
 
     const workspaceId = this.config.get<string>('POWER_BI_WORKSPACE_ID')?.trim();
     const reportId = this.config.get<string>('POWER_BI_REPORT_ID')?.trim();
@@ -54,10 +84,11 @@ export class PowerBiService {
     if (!this.hasServicePrincipal() || !workspaceId || !reportId) {
       return {
         mode: 'none',
-        message: 'Power BI belum dikonfigurasi',
+        provider: 'none',
+        message: 'Metabase / Power BI belum dikonfigurasi',
         setup: [
-          'Opsi B: set POWERBI_SHARE_URL di .env (Share → Copy link dari Power BI)',
-          'Opsi A: set POWERBI_EMBED_URL (Publish to Web, butuh admin enable)',
+          'Metabase: set METABASE_DASHBOARD_URL di .env',
+          'Power BI: set POWERBI_SHARE_URL atau POWERBI_EMBED_URL',
         ],
       };
     }
@@ -94,6 +125,7 @@ export class PowerBiService {
     const tokenData = await tokenRes.json();
     return {
       mode: 'embed',
+      provider: 'powerbi',
       reportId: report.id,
       embedUrl: report.embedUrl,
       accessToken: tokenData.token,

@@ -3,17 +3,19 @@ import { api } from '@/lib/api'
 
 export type PowerBiStatus = {
   configured: boolean
-  mode: 'iframe' | 'link' | 'embed' | 'none'
+  provider: 'metabase' | 'powerbi' | 'none'
+  mode: 'metabase' | 'iframe' | 'link' | 'embed' | 'none'
   shareUrl: string | null
   reportId: string | null
   workspaceId: string | null
 }
 
 export type PowerBiEmbed =
-  | { mode: 'iframe'; embedUrl: string }
-  | { mode: 'link'; shareUrl: string }
-  | { mode: 'embed'; reportId: string; embedUrl: string; accessToken: string; expiration: string }
-  | { mode: 'none'; message: string; setup: string[] }
+  | { mode: 'metabase'; embedUrl: string; provider: 'metabase' }
+  | { mode: 'iframe'; embedUrl: string; provider?: 'powerbi' }
+  | { mode: 'link'; shareUrl: string; provider?: 'metabase' | 'powerbi' }
+  | { mode: 'embed'; reportId: string; embedUrl: string; accessToken: string; expiration: string; provider?: 'powerbi' }
+  | { mode: 'none'; message: string; setup: string[]; provider?: 'none' }
 
 export function usePowerBiStatus() {
   return useQuery<PowerBiStatus>({

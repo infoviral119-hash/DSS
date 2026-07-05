@@ -18,6 +18,19 @@ function Read-EnvValue([string]$file, [string]$key) {
 
 $token = $env:SUPABASE_ACCESS_TOKEN
 if (-not $token) { $token = Read-EnvValue (Join-Path $root "supabase.env") "SUPABASE_ACCESS_TOKEN" }
+if (-not $token) {
+  foreach ($file in @("supabase.token.env.txt", "supabase.token.env")) {
+    $path = Join-Path $root $file
+    if (-not (Test-Path $path)) { continue }
+    $raw = (Get-Content $path -Raw).Trim()
+    if ($raw -match '^\s*SUPABASE_ACCESS_TOKEN\s*=') {
+      $token = ($raw -split '=', 2)[1].Trim().Trim('"')
+    } elseif ($raw -match '^sbp_') {
+      $token = $raw
+    }
+    if ($token) { break }
+  }
+}
 
 if (-not $token) {
   Write-Host ""
@@ -25,7 +38,7 @@ if (-not $token) {
   Write-Host ""
   Write-Host "Token Management API belum ada." -ForegroundColor Yellow
   Write-Host "  1. Buka: https://supabase.com/dashboard/account/tokens"
-  Write-Host "  2. Generate token -> simpan di supabase.env:"
+  Write-Host "  2. Generate token (akun pemilik project $ProjectRef) -> simpan di supabase.env atau supabase.token.env"
   Write-Host "       SUPABASE_ACCESS_TOKEN=sbp_..."
   Write-Host "  3. Jalankan lagi: npm run supabase:auth"
   Write-Host ""
@@ -49,6 +62,21 @@ Write-Host "Site URL: $SiteUrl"
 Write-Host ""
 
 try {
+  $projects = Invoke-RestMethod -Uri "https://api.supabase.com/v1/projects" `
+    -Headers @{ Authorization = "Bearer $token" }
+  $owned = @($projects | Where-Object { $_.ref -eq $ProjectRef -or $_.id -eq $ProjectRef })
+  if ($owned.Count -eq 0) {
+    Write-Host "Token valid, tapi tidak punya akses ke project $ProjectRef." -ForegroundColor Red
+    Write-Host "Project yang terlihat di akun token ini:" -ForegroundColor Yellow
+    foreach ($p in $projects) { Write-Host "  - $($p.ref) ($($p.name))" }
+    Write-Host ""
+    Write-Host "Gunakan token dari akun pemilik project e-Insight, atau set manual:" -ForegroundColor Yellow
+    Write-Host "  https://supabase.com/dashboard/project/$ProjectRef/auth/url-configuration"
+    Write-Host "  Site URL     : $SiteUrl"
+    Write-Host "  Redirect URLs: $AllowList"
+    exit 1
+  }
+
   $res = Invoke-RestMethod -Uri "https://api.supabase.com/v1/projects/$ProjectRef/config/auth" `
     -Method PATCH `
     -Headers @{

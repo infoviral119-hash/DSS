@@ -62,6 +62,7 @@ export default function App() {
                   <Route path="import" element={<ImportDataPage />} />
                   <Route path="analitik" element={<AnalitikPage />} />
                   <Route path="gis" element={<Suspense fallback={<GisFallback />}><GISPage /></Suspense>} />
+                  <Route path="metabase" element={<PowerBiPage />} />
                   <Route path="powerbi" element={<PowerBiPage />} />
                   <Route path="ai-insight" element={<AIInsightPage />} />
                   <Route path="forecasting" element={<ForecastingPage />} />

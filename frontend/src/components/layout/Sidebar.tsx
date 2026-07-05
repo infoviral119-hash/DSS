@@ -28,7 +28,7 @@ const NAV_ITEMS: NavItem[] = [
   { id: 'data-historis', label: 'Data Historis', path: '/data-historis', icon: 'data' },
   { id: 'import', label: 'Import Data', path: '/import', icon: 'import', roles: ['admin', 'operator'] },
   { id: 'analitik', label: 'Analitik', path: '/analitik', icon: 'analitik' },
-  { id: 'powerbi', label: 'Power BI', path: '/powerbi', icon: 'powerbi' },
+  { id: 'metabase', label: 'Metabase', path: '/metabase', icon: 'powerbi' },
   { id: 'gis', label: 'GIS Intelligence', path: '/gis', icon: 'gis' },
   { id: 'ai', label: 'AI Insight', path: '/ai-insight', icon: 'ai' },
   { id: 'forecast', label: 'Forecasting', path: '/forecasting', icon: 'forecast' },
