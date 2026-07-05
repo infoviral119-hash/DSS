@@ -1,9 +1,11 @@
-name = "e-insight"
+name = "e-insight-api"
+main = "src/worker-api.ts"
+account_id = "e37870c5d69733b6015c82a740cb3b7f"
 compatibility_date = "2024-09-23"
 compatibility_flags = ["nodejs_compat_v2"]
-pages_build_output_dir = "frontend/dist"
 
 [vars]
+NODE_ENV = "production"
+CLOUDFLARE_WORKER = "1"
 SUPABASE_URL = "https://vnfndvbxhvpikjxvnkmc.supabase.co"
 CORS_ORIGIN = "https://e-insight.pages.dev,http://localhost:5173"
-ML_SERVICE_URL = "https://e-insight-e-insight-ml.hf.space"

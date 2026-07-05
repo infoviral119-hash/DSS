@@ -11,6 +11,10 @@ export class SupabaseService implements OnModuleInit {
   constructor(private config: ConfigService) {}
 
   async onModuleInit() {
+    if (process.env.CLOUDFLARE_WORKER === '1') {
+      this.connect();
+      return;
+    }
     this.connect();
     await this.tryApplyRlsOnStartup();
   }

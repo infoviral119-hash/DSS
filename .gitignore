@@ -4,6 +4,8 @@ dist/
 .env.local
 .env.*.local
 *.env
+hugging*.env*
+hugging.env.txt
 !*.env.example
 !POWERBI.env.example
 API URL.env
@@ -11,6 +13,10 @@ DSS_Project_New.env
 passupabase.env
 reset pass database.env
 anon public*.env*
+.cloudflared/
+__pycache__/
+*.pyc
+cloudflared/config.yml
 *.log.DS_Store
 Thumbs.db
 desktop.ini

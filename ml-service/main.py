@@ -156,5 +156,5 @@ def forecast(req: ForecastRequest):
 if __name__ == "__main__":
     import uvicorn
 
-    port = int(os.getenv("ML_SERVICE_PORT", "8000"))
+    port = int(os.getenv("PORT") or os.getenv("ML_SERVICE_PORT") or "8000")
     uvicorn.run("main:app", host="0.0.0.0", port=port, reload=False)
