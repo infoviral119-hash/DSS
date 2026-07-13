@@ -3,7 +3,6 @@ import { Button } from '@/components/ui/button'
 import { useAuth } from '@/contexts/AuthContext'
 import { useTheme } from '@/contexts/ThemeContext'
 import { useAiLlmStatus } from '@/features/ai-insight/hooks/useAiLlm'
-import { usePowerBiStatus } from '@/features/powerbi/hooks/usePowerBi'
 import { useQuery } from '@tanstack/react-query'
 import { api } from '@/lib/api'
 import { Settings, Moon, Sun, LogOut, User, Activity } from 'lucide-react'
@@ -18,7 +17,6 @@ export function PengaturanPage() {
   const { user, logout } = useAuth()
   const { theme, toggleTheme } = useTheme()
   const { data: llm } = useAiLlmStatus()
-  const { data: bi } = usePowerBiStatus()
   const { data: ml } = useQuery({
     queryKey: ['ml-status-settings'],
     queryFn: async () => (await api.get('/api/forecast/ml-status')).data as { connected: boolean; message?: string },
@@ -66,13 +64,6 @@ export function PengaturanPage() {
             <span className="flex items-center gap-2">
               <StatusDot ok={Boolean(ml?.connected)} />
               {ml?.connected ? 'Online' : (ml?.message ?? 'Offline')}
-            </span>
-          </div>
-          <div className="flex items-center justify-between gap-2">
-            <span className="text-muted-foreground">Metabase BI</span>
-            <span className="flex items-center gap-2">
-              <StatusDot ok={Boolean(bi?.configured)} />
-              {bi?.configured ? (bi.provider === 'metabase' ? 'Terhubung' : 'Power BI') : 'Belum setup'}
             </span>
           </div>
           <p className="pt-1 text-xs text-muted-foreground">

@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <title>e-Insight — Stack Teknologi</title>
+  <style>
+    @page { size: A4; margin: 18mm 15mm; }
+    body { font-family: "Segoe UI", Arial, sans-serif; font-size: 10pt; color: #222; line-height: 1.5; }
+    .narrative { font-size: 10pt; line-height: 1.65; margin: 0 0 22px; white-space: pre-line; }
+    h2 { font-size: 11pt; margin: 16px 0 6px; border-bottom: 1px solid #ccc; padding-bottom: 3px; }
+    table { width: 100%; border-collapse: collapse; margin-bottom: 8px; font-size: 9pt; }
+    th, td { border: 1px solid #ccc; padding: 5px 7px; text-align: left; vertical-align: top; }
+    th { background: #f5f5f5; font-weight: 600; }
+    td:nth-child(2) { white-space: nowrap; width: 90px; }
+    .footer { margin-top: 20px; font-size: 8pt; color: #777; text-align: center; }
+  </style>
+</head>
+<body>
+  <p class="narrative">e-Insight
+
+Integrated Violence Case Management &amp; Decision Support System
+
+Version 1.0 • July 2026
+
+Platform
+https://e-insight.pages.dev
+
+Development Team
+@budi
+@Henokhvita</p>
+
+  <h2>1. Layanan Cloud &amp; Hosting</h2>
+  <table>
+    <tr><th>Software / Layanan</th><th>Status</th><th>Manfaat &amp; Fungsi</th></tr>
+    <tr><td>Cloudflare Pages</td><td>✅ Aktif 24/7</td><td>Hosting frontend React, CDN global, HTTPS otomatis</td></tr>
+    <tr><td>Cloudflare Pages Functions</td><td>✅ Aktif 24/7</td><td>Backend API serverless (/api/*) tanpa VPS</td></tr>
+    <tr><td>Supabase</td><td>✅ Aktif 24/7</td><td>Database PostgreSQL cloud + autentikasi user</td></tr>
+    <tr><td>Groq API (Llama 3.3 70B)</td><td>✅ Aktif 24/7</td><td>LLM untuk AI Insight, narasi, dan chat analitik</td></tr>
+    <tr><td>Hugging Face Spaces</td><td>✅ Aktif 24/7</td><td>Hosting layanan ML forecast Python</td></tr>
+    <tr><td>Wrangler CLI</td><td>✅ Aktif</td><td>Deploy ke Cloudflare &amp; pengelolaan secret</td></tr>
+  </table>
+
+  <h2>2. Framework &amp; Bahasa</h2>
+  <table>
+    <tr><th>Software / Plugin</th><th>Status</th><th>Manfaat &amp; Fungsi</th></tr>
+    <tr><td>React 19</td><td>✅ Aktif</td><td>Antarmuka pengguna interaktif</td></tr>
+    <tr><td>TypeScript</td><td>✅ Aktif</td><td>Type safety di frontend, API, dan Functions</td></tr>
+    <tr><td>Vite 8</td><td>✅ Aktif</td><td>Build tool &amp; dev server frontend</td></tr>
+    <tr><td>FastAPI + Uvicorn</td><td>✅ Aktif</td><td>Framework API layanan machine learning</td></tr>
+    <tr><td>NestJS 11</td><td>⚙️ Dev lokal</td><td>Backend lengkap untuk pengembangan lokal</td></tr>
+    <tr><td>Python 3</td><td>✅ Aktif</td><td>Runtime layanan ML forecast</td></tr>
+  </table>
+
+  <h2>3. Frontend &amp; UI</h2>
+  <table>
+    <tr><th>Software / Plugin</th><th>Status</th><th>Manfaat &amp; Fungsi</th></tr>
+    <tr><td>Tailwind CSS 4</td><td>✅ Aktif</td><td>Styling responsif &amp; tema modern</td></tr>
+    <tr><td>Radix UI</td><td>✅ Aktif</td><td>Komponen aksesibel (dialog, tabs, dropdown)</td></tr>
+    <tr><td>Apache ECharts</td><td>✅ Aktif</td><td>Chart interaktif — pengganti Metabase</td></tr>
+    <tr><td>TanStack React Query</td><td>✅ Aktif</td><td>Cache &amp; refresh data API otomatis</td></tr>
+    <tr><td>React Router 7</td><td>✅ Aktif</td><td>Navigasi antar modul aplikasi</td></tr>
+    <tr><td>Axios</td><td>✅ Aktif</td><td>HTTP client dengan autentikasi JWT</td></tr>
+    <tr><td>Framer Motion</td><td>✅ Aktif</td><td>Animasi transisi halaman</td></tr>
+    <tr><td>Lucide React</td><td>✅ Aktif</td><td>Ikon navigasi &amp; KPI</td></tr>
+  </table>
+
+  <h2>4. Database &amp; Autentikasi</h2>
+  <table>
+    <tr><th>Software / Plugin</th><th>Status</th><th>Manfaat &amp; Fungsi</th></tr>
+    <tr><td>Supabase Auth</td><td>✅ Aktif</td><td>Login, registrasi, session JWT</td></tr>
+    <tr><td>PostgreSQL (Supabase)</td><td>✅ Aktif</td><td>Penyimpanan data kasus SIMPATI.KK</td></tr>
+    <tr><td>@supabase/supabase-js</td><td>✅ Aktif</td><td>Klien database &amp; auth</td></tr>
+    <tr><td>Role-Based Access Control</td><td>✅ Aktif</td><td>Kontrol akses admin / operator / auditor</td></tr>
+  </table>
+
+  <h2>5. AI &amp; Machine Learning</h2>
+  <table>
+    <tr><th>Software / Plugin</th><th>Status</th><th>Manfaat &amp; Fungsi</th></tr>
+    <tr><td>Groq — Llama 3.3 70B</td><td>✅ Aktif</td><td>Ringkasan eksekutif &amp; rekomendasi strategis</td></tr>
+    <tr><td>scikit-learn</td><td>✅ Aktif</td><td>Random Forest &amp; model neural network</td></tr>
+    <tr><td>XGBoost</td><td>✅ Aktif</td><td>Regresi prediksi kasus time-series</td></tr>
+    <tr><td>Hybrid Forecast Model</td><td>✅ Aktif</td><td>Gabungan multi-model, pilih terbaik otomatis</td></tr>
+    <tr><td>Prophet</td><td>⚙️ Opsional</td><td>Forecast musiman (jika library tersedia)</td></tr>
+    <tr><td>pandas &amp; numpy</td><td>✅ Aktif</td><td>Pra-pemrosesan data time-series</td></tr>
+  </table>
+
+  <h2>6. Analitik &amp; Visualisasi</h2>
+  <table>
+    <tr><th>Software / Plugin</th><th>Status</th><th>Manfaat &amp; Fungsi</th></tr>
+    <tr><td>Modul Dashboard</td><td>✅ Aktif</td><td>KPI total kasus, aktif, selesai, tren</td></tr>
+    <tr><td>Modul Analitik</td><td>✅ Aktif</td><td>Pareto, treemap, Sankey, funnel, heatmap</td></tr>
+    <tr><td>Modul Laporan</td><td>✅ Aktif</td><td>Report builder &amp; export PDF</td></tr>
+    <tr><td>Metabase OSS</td><td>❌ Tidak aktif</td><td>Menu disembunyikan; tidak di-deploy cloud</td></tr>
+    <tr><td>Power BI</td><td>❌ Tidak aktif</td><td>Alternatif berbayar; belum dikonfigurasi</td></tr>
+  </table>
+
+  <h2>7. GIS &amp; Pemetaan</h2>
+  <table>
+    <tr><th>Software / Plugin</th><th>Status</th><th>Manfaat &amp; Fungsi</th></tr>
+    <tr><td>Leaflet + react-leaflet</td><td>✅ Aktif</td><td>Peta interaktif modul GIS Intelligence</td></tr>
+    <tr><td>leaflet.markercluster</td><td>✅ Aktif</td><td>Cluster titik kasus di peta</td></tr>
+    <tr><td>leaflet.heat</td><td>✅ Aktif</td><td>Heatmap kepadatan kasus</td></tr>
+    <tr><td>@turf/turf</td><td>✅ Aktif</td><td>Analisis geospasial</td></tr>
+    <tr><td>OpenStreetMap</td><td>✅ Aktif</td><td>Basemap peta gratis</td></tr>
+    <tr><td>Nominatim</td><td>✅ Aktif</td><td>Geocoding alamat Indonesia</td></tr>
+  </table>
+
+  <h2>8. Keamanan &amp; Data</h2>
+  <table>
+    <tr><th>Software / Plugin</th><th>Status</th><th>Manfaat &amp; Fungsi</th></tr>
+    <tr><td>RBAC &amp; Data Scope</td><td>✅ Aktif</td><td>Pembatasan akses per peran &amp; wilayah</td></tr>
+    <tr><td>PII Masking</td><td>✅ Aktif</td><td>Perlindungan data sensitif korban</td></tr>
+    <tr><td>Audit Trail</td><td>✅ Aktif</td><td>Pencatatan aktivitas pengguna</td></tr>
+    <tr><td>xlsx (SheetJS)</td><td>✅ Aktif</td><td>Import logbook Excel SIMPATI.KK</td></tr>
+    <tr><td>html2canvas</td><td>✅ Aktif</td><td>Export laporan ke gambar/PDF</td></tr>
+    <tr><td>MFA (TOTP/Email)</td><td>⚙️ UI saja</td><td>Antarmuka ada; verifikasi belum aktif</td></tr>
+  </table>
+
+  <h2>9. DevOps &amp; Tooling Lokal</h2>
+  <table>
+    <tr><th>Software / Plugin</th><th>Status</th><th>Manfaat &amp; Fungsi</th></tr>
+    <tr><td>Docker + Docker Compose</td><td>⚙️ Opsional lokal</td><td>Menjalankan Metabase lokal saat ujicoba</td></tr>
+    <tr><td>cloudflared</td><td>⚙️ Opsional</td><td>Quick tunnel Cloudflare untuk demo lokal</td></tr>
+    <tr><td>concurrently</td><td>⚙️ Dev</td><td>Jalankan frontend + backend + ML sekaligus</td></tr>
+    <tr><td>Git + GitHub</td><td>✅ Aktif</td><td>Version control &amp; kolaborasi kode</td></tr>
+  </table>
+
+</body>
+</html>

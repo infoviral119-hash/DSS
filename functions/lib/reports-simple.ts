@@ -386,12 +386,6 @@ export async function handleReports(
     return fileResponse(csv, 'application/vnd.ms-excel; charset=utf-8', `laporan-${Date.now()}.xls`, cors)
   }
 
-  if (path === '/api/reports/powerbi-sync' && method === 'POST') {
-    const { data } = await findAll(env, { limit: '5000' }, user ?? undefined)
-    const csv = buildCsv(data)
-    return { ok: true, rows: data.length, format: 'csv', note: 'Unduh via /api/reports/export untuk sinkronisasi Power BI', preview: csv.slice(0, 500) }
-  }
-
   return null
 }
 
