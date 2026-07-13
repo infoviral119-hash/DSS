@@ -27,6 +27,7 @@ import {
   HardDrive,
   RotateCcw,
   Clock,
+  BookOpen,
 } from 'lucide-react'
 import { cn } from '@/lib/utils'
 import { Suspense, useState } from 'react'
@@ -75,6 +76,7 @@ const ADMIN_NAV: NavGroup[] = [
       { path: '/admin/notifications', label: 'Notification', icon: Bell },
       { path: '/admin/system-health', label: 'System Health', icon: HeartPulse },
       { path: '/admin/config', label: 'Configuration', icon: Settings },
+      { path: '/admin/help-cms', label: 'CMS Bantuan', icon: BookOpen },
     ],
   },
   {

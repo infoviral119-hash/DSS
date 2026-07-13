@@ -13,15 +13,6 @@ export type Env = {
   AI_PROVIDER?: string
   AI_LLM_ENABLED?: string
   ML_SERVICE_URL?: string
-  METABASE_DASHBOARD_URL?: string
-  METABASE_PUBLIC_URL?: string
-  POWERBI_EMBED_URL?: string
-  POWERBI_SHARE_URL?: string
-  POWER_BI_TENANT_ID?: string
-  POWER_BI_CLIENT_ID?: string
-  POWER_BI_CLIENT_SECRET?: string
-  POWER_BI_WORKSPACE_ID?: string
-  POWER_BI_REPORT_ID?: string
 }
 
 export type AuthUser = {

@@ -150,7 +150,7 @@ export function loadEnvFromFolder(rootDir?: string): Record<string, string> {
   for (const file of files) {
     const content = readFileSafe(path.join(root, file));
     for (const line of content.split('\n')) {
-      const m = line.match(/^(POWER_BI_[A-Z_]+|POWERBI_EMBED_URL|METABASE_[A-Z_]+|DATABASE_URL)=(.*)$/);
+      const m = line.match(/^(DATABASE_URL)=(.*)$/);
       if (m) result[m[1]] = m[2].trim();
     }
     if (/passupabase/i.test(file) && content.trim() && !content.includes('=')) {
@@ -173,7 +173,7 @@ function parseEnvFile(content: string): Record<string, string> {
   const normalized = content.includes('\n')
     ? content
     : content.replace(
-        /(SUPABASE_|VITE_|POWER_BI_|POWERBI_|DATABASE_|PORT|JWT_|CORS_)/g,
+        /(SUPABASE_|VITE_|DATABASE_|PORT|JWT_|CORS_)/g,
         '\n$1',
       );
 
@@ -200,9 +200,6 @@ export function syncEnvFromFolder(rootDir?: string): Record<string, string> {
 
   const backendKeys = [
     'SUPABASE_URL', 'SUPABASE_ANON_KEY', 'SUPABASE_SERVICE_ROLE_KEY', 'DATABASE_URL',
-    'POWER_BI_CLIENT_ID', 'POWER_BI_CLIENT_SECRET', 'POWER_BI_TENANT_ID',
-    'POWER_BI_WORKSPACE_ID', 'POWER_BI_REPORT_ID', 'POWERBI_EMBED_URL',
-    'METABASE_DASHBOARD_URL', 'METABASE_PUBLIC_URL',
     'PORT', 'JWT_SECRET', 'CORS_ORIGIN',
   ];
   const frontendKeys = ['VITE_SUPABASE_URL', 'VITE_SUPABASE_ANON_KEY', 'VITE_API_URL'];

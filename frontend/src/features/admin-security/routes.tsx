@@ -27,6 +27,7 @@ const ConsentPage = lazy(() => import('./pages/SystemPages').then((m) => ({ defa
 const PrivacyPage = lazy(() => import('./pages/SystemPages').then((m) => ({ default: m.PrivacyPage })))
 const SchedulerPage = lazy(() => import('./pages/SystemPages').then((m) => ({ default: m.SchedulerPage })))
 const NotificationsPage = lazy(() => import('./pages/SystemPages').then((m) => ({ default: m.NotificationsPage })))
+const HelpCmsPage = lazy(() => import('@/features/help-center/admin/HelpCmsPage').then((m) => ({ default: m.HelpCmsPage })))
 
 export function AdminFallback() {
   return (
@@ -67,6 +68,7 @@ export function adminSecurityRoutes() {
       {backupRecoveryRoutes()}
       <Route path="system-health" element={<SystemHealthPage />} />
       <Route path="config" element={<ConfigPage />} />
+      <Route path="help-cms" element={<HelpCmsPage />} />
       <Route path="data-retention" element={<DataRetentionPage />} />
       <Route path="privacy" element={<PrivacyPage />} />
       <Route path="consent" element={<ConsentPage />} />

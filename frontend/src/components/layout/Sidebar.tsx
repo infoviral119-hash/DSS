@@ -10,10 +10,10 @@ import {
   Sparkles,
   TrendingUp,
   FileText,
-  PieChart,
   Settings,
   Shield,
   Layers,
+  BookOpen,
   ChevronLeft,
   ChevronRight,
 } from 'lucide-react'
@@ -22,13 +22,12 @@ import type { NavItem, UserRole } from '@/types'
 import type { ElementType } from 'react'
 import { useAuth } from '@/contexts/AuthContext'
 
-const NAV_ITEMS: NavItem[] = [
+const MAIN_NAV_ITEMS: NavItem[] = [
   { id: 'dashboard', label: 'Dashboard', path: '/', icon: 'dashboard' },
   { id: 'pendampingan', label: 'Pendampingan', path: '/pendampingan', icon: 'pendampingan' },
   { id: 'data-historis', label: 'Data Historis', path: '/data-historis', icon: 'data' },
   { id: 'import', label: 'Import Data', path: '/import', icon: 'import', roles: ['admin', 'operator'] },
   { id: 'analitik', label: 'Analitik', path: '/analitik', icon: 'analitik' },
-  { id: 'metabase', label: 'Metabase', path: '/metabase', icon: 'powerbi' },
   { id: 'gis', label: 'GIS Intelligence', path: '/gis', icon: 'gis' },
   { id: 'ai', label: 'AI Insight', path: '/ai-insight', icon: 'ai' },
   { id: 'forecast', label: 'Forecasting', path: '/forecasting', icon: 'forecast' },
@@ -38,13 +37,26 @@ const NAV_ITEMS: NavItem[] = [
   { id: 'settings', label: 'Pengaturan', path: '/pengaturan', icon: 'settings', roles: ['admin'] },
 ]
 
+const FOOTER_NAV_ITEMS: NavItem[] = [
+  { id: 'bantuan', label: 'Bantuan', path: '/bantuan', icon: 'bantuan' },
+]
+
+const NAV_ITEMS: NavItem[] = [...MAIN_NAV_ITEMS, ...FOOTER_NAV_ITEMS]
+
+const TOUR_ATTR: Record<string, string> = {
+  dashboard: 'nav-dashboard',
+  analitik: 'nav-analitik',
+  gis: 'nav-gis',
+  ai: 'nav-ai',
+  bantuan: 'nav-bantuan',
+}
+
 const ICON_MAP: Record<string, ElementType> = {
   dashboard: LayoutDashboard,
   pendampingan: HandHeart,
   data: Database,
   import: Upload,
   analitik: BarChart3,
-  powerbi: PieChart,
   gis: Map,
   ai: Sparkles,
   forecast: TrendingUp,
@@ -52,6 +64,7 @@ const ICON_MAP: Record<string, ElementType> = {
   master: Layers,
   admin: Shield,
   settings: Settings,
+  bantuan: BookOpen,
 }
 
 interface SidebarProps {
@@ -64,12 +77,41 @@ export function Sidebar({ collapsed, onToggle }: SidebarProps) {
   const location = useLocation()
   const role = user?.role as UserRole | undefined
 
-  const visibleItems = NAV_ITEMS.filter(
+  const visibleMain = MAIN_NAV_ITEMS.filter(
+    (item) => !item.roles || (role && item.roles.includes(role)),
+  )
+  const visibleFooter = FOOTER_NAV_ITEMS.filter(
     (item) => !item.roles || (role && item.roles.includes(role)),
   )
 
+  const renderLink = (item: NavItem) => {
+    const Icon = ICON_MAP[item.icon]
+    const tourAttr = TOUR_ATTR[item.id]
+    return (
+      <li key={item.id}>
+        <NavLink
+          to={item.path}
+          end={item.path === '/'}
+          data-tour={tourAttr}
+          className={({ isActive }) =>
+            cn(
+              'flex items-center gap-3 rounded-md px-3 py-2 text-sm transition-colors',
+              (isActive || (item.path === '/admin' && location.pathname.startsWith('/admin')) || (item.path === '/bantuan' && location.pathname.startsWith('/bantuan')))
+                ? 'bg-primary/10 text-primary font-medium'
+                : 'text-muted-foreground hover:bg-secondary/80 hover:text-card-foreground',
+            )
+          }
+        >
+          <Icon className="h-4 w-4 shrink-0" />
+          {!collapsed && <span className="truncate">{item.label}</span>}
+        </NavLink>
+      </li>
+    )
+  }
+
   return (
     <motion.aside
+      data-tour="sidebar"
       animate={{ width: collapsed ? 64 : 240 }}
       transition={{ duration: 0.2 }}
       className="fixed left-0 top-0 z-40 flex h-screen flex-col border-r border-border bg-sidebar backdrop-blur-xl"
@@ -86,31 +128,18 @@ export function Sidebar({ collapsed, onToggle }: SidebarProps) {
         )}
       </div>
 
-      <nav className="flex-1 overflow-y-auto p-2">
+      <nav className="flex flex-1 flex-col overflow-y-auto p-2">
         <ul className="space-y-0.5">
-          {visibleItems.map((item) => {
-            const Icon = ICON_MAP[item.icon]
-            return (
-              <li key={item.id}>
-                <NavLink
-                  to={item.path}
-                  end={item.path === '/'}
-                  className={({ isActive }) =>
-                    cn(
-                      'flex items-center gap-3 rounded-md px-3 py-2 text-sm transition-colors',
-                      (isActive || (item.path === '/admin' && location.pathname.startsWith('/admin')))
-                        ? 'bg-primary/10 text-primary font-medium'
-                        : 'text-muted-foreground hover:bg-secondary/80 hover:text-card-foreground'
-                    )
-                  }
-                >
-                  <Icon className="h-4 w-4 shrink-0" />
-                  {!collapsed && <span className="truncate">{item.label}</span>}
-                </NavLink>
-              </li>
-            )
-          })}
+          {visibleMain.map(renderLink)}
         </ul>
+        {visibleFooter.length > 0 && (
+          <>
+            <div className="my-2 border-t border-border" />
+            <ul className="space-y-0.5">
+              {visibleFooter.map(renderLink)}
+            </ul>
+          </>
+        )}
       </nav>
 
       <button

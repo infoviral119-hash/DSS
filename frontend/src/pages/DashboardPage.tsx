@@ -138,6 +138,7 @@ export function DashboardPage() {
       )}
 
       <motion.div
+        data-tour="dashboard-kpi"
         initial={{ opacity: 0, y: 8 }}
         animate={{ opacity: 1, y: 0 }}
         className="grid grid-cols-2 gap-3 md:grid-cols-4"

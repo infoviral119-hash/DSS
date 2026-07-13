@@ -28,7 +28,7 @@ export function GlobalFilterBar() {
     : ['Aktif', 'Selesai', 'Dirujuk']
 
   return (
-    <div className="glass-panel mb-4 flex flex-wrap items-center gap-2 rounded-lg p-3">
+    <div className="glass-panel mb-4 flex flex-wrap items-center gap-2 rounded-lg p-3" data-tour="global-filter">
       <div className="flex items-center gap-1.5 text-xs font-medium text-muted-foreground">
         <Filter className="h-3.5 w-3.5" />
         Filter Global
